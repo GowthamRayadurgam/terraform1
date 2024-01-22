@@ -1,0 +1,60 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: "Terraform_Installation"
+  jobs:
+    - job: "terraform_install"
+      steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'v1.2.7'
+
+
+
+- stage: "Terraform_init_AND_Plan"
+  jobs:
+    - job: "terraform_init_AND_Plan"
+      steps:
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/practice3'
+            backendServiceArm: 'ADO-Azure_portal-Connection'
+            backendAzureRmResourceGroupName: 'rsg1'
+            backendAzureRmStorageAccountName: 'tfbackend15121'
+            backendAzureRmContainerName: 'tf-container'
+            backendAzureRmKey: './terraform.tfstate'
+
+
+# While writing terraform plan as saperate Job or Saperate stage the agent is not able to identify the module init, Hence writing the plan task in same Job
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/practice3'
+            environmentServiceNameAzureRM: 'ADO-Azure_portal-Connection'
+
+
+#- task: TerraformTaskV4@4
+#  inputs:
+#    command: 'apply'
+#    workingDirectory: '$(System.DefaultWorkingDirectory)/practice3'
+#    environmentServiceNameAzureRM: 'Free Trial(1)(698765e6-94ed-4427-9337-7868b73cd6bd)' //
+
+
+#- task: CopyFiles@2
+#  inputs:
+#    SourceFolder: '$(Agent.BuildDirectory)'
+#    Contents: '**/plan.*'
+#    TargetFolder: '$(build.artifactstagingdirectory)'
+

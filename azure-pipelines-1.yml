@@ -1,0 +1,78 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: "Terraform_Installation"
+  jobs:
+    - job: "terraform_install"
+      steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'v1.2.7'
+
+#- stage: "azlogin"
+#  jobs:
+#    - job: "azlogin"
+#      steps:
+#       - task: AzureCLI@2
+#         inputs:
+#           azureSubscription: 'ADO'
+#           scriptType: 'bash'
+#           scriptLocation: 'inlineScript'
+#           inlineScript: 'az account list'
+
+- stage: "Terraform_init_AND_Plan"
+  jobs:
+#    - job: "azaccountset"
+#      steps:
+#        - task: AzureCLI@2
+#          inputs:
+#            azureSubscription: 'ADO'
+#            scriptType: 'bash'
+#            scriptLocation: 'inlineScript'
+#            inlineScript: 'az account set -s "aeb169ae-7f30-4c18-b471-10b5e06576ed"'
+
+
+    - job: "terraform_init_AND_Plan"
+      steps:
+        - task: TerraformTaskV2@2
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/practice4'
+            backendServiceArm: 'ADO'
+            backendAzureRmResourceGroupName: 'rsg1'
+            backendAzureRmStorageAccountName: 'tfbackend15121'
+            backendAzureRmContainerName: 'tf-container'
+            backendAzureRmKey: './terraform.tfstate'
+
+
+# While writing terraform plan as saperate Job or Saperate stage the agent is not able to identify the module init, Hence writing the plan task in same Job
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/practice4'
+            environmentServiceNameAzureRM: 'ADO'
+
+
+#- task: TerraformTaskV4@4
+#  inputs:
+#    command: 'apply'
+#    workingDirectory: '$(System.DefaultWorkingDirectory)/practice3'
+#    environmentServiceNameAzureRM: 'Free Trial(1)(698765e6-94ed-4427-9337-7868b73cd6bd)' //
+
+
+#- task: CopyFiles@2
+#  inputs:
+#    SourceFolder: '$(Agent.BuildDirectory)'
+#    Contents: '**/plan.*'
+#    TargetFolder: '$(build.artifactstagingdirectory)'

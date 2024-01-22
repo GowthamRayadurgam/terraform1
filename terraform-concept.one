@@ -1,0 +1,12 @@
+Count: To Specify count of instances to be created and to 
+count index: To itegate through and assign the count specified.
+
+
+
+
+
+
+
+
+Learning after using Modules.
+we cant use the variables defines in one module in other modules but we can use them in root module
