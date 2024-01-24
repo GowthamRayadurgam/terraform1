@@ -15,10 +15,10 @@ resource "azurerm_subnet" "subnet1" {
 
 
 output "subnet1-address" {
-  value = azurerm_subnet.subnet1.id
+  value = azurerm_subnet.subnet1
 }
 
 output "vnet1" {
-  value = azurerm_virtual_network.VNET1.id
+  value = azurerm_virtual_network.VNET1
   
 }

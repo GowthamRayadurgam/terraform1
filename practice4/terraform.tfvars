@@ -13,5 +13,9 @@ users = {
   "charan@gmail.com"  = "Charan"
 }
 
-vmname = "Gowtham-Vm"
-username = "Gowtham"
+vmname            = "Gowtham-Vm"
+username          = "Gowtham"
+frontend-port     = "80"
+backend-port      = "80"
+nat-backend-port  = "3389"
+nat-frontend-port = "3389"

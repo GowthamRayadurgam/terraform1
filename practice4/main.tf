@@ -77,17 +77,31 @@ module "vm" {
   rsg-location = var.rsg-location
   vmname       = var.vmname
   userpasswd   = module.RandomPassword.userpasswd
-  nic = module.NIC.nic1
-  Username = var.username
+  nic          = module.NIC.nic1
+  Username     = var.username
 }
 
+module "privatelb" {
+  source            = "./modules/pri-lb"
+  frontend-port     = var.frontend-port
+  backend-port      = var.backend-port
+  nat-backend-port  = var.backend-port
+  nat-frontend-port = var.frontend-port
+  rsgname           = var.rsg-name
+  location          = var.rsg-location
+#  subnet1-address   = var.subnet1-address
+}
+
+
+
 resource "azurerm_network_interface_security_group_association" "NIC-NSG" {
-  network_interface_id = module.NIC.nic1
+  network_interface_id      = module.NIC.nic1
   network_security_group_id = module.nsg.nsg1
 }
 
 
+
 output "VM1-access" {
   value = nonsensitive(module.vm.Username)
-#  sensitive = true
+  #  sensitive = true
 }

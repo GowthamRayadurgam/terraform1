@@ -20,6 +20,7 @@ variable "CIDR1" {
 }
 
 variable "vnet1" {
+  
 }
 
 variable "subnet1-address" {
@@ -36,5 +37,21 @@ variable "users" {
 }
 
 variable "username" {
-  
+
+}
+
+variable "frontend-port" {
+
+}
+
+variable "backend-port" {
+
+}
+
+variable "nat-frontend-port" {
+
+}
+
+variable "nat-backend-port" {
+
 }

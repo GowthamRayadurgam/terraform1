@@ -1,5 +1,3 @@
-variable "lb-name" {
-}
 
 variable "location" {
   
@@ -8,8 +6,8 @@ variable "location" {
 variable "rsgname" { 
 }
 
-variable "subnet1-address" {
-}
+#variable "subnet1-address" {
+#}
 
 variable "frontend-port" {
   
@@ -19,6 +17,11 @@ variable "backend-port" {
   
 }
 
-variable "vnet1" {
+
+variable "nat-backend-port" {
+  
+}
+
+variable "nat-frontend-port" {
   
 }
