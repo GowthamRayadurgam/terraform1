@@ -1,7 +1,34 @@
+variable "rsg-location" { 
+}
+
+variable "rsg-name" { 
+}
+
+#variable "subnet1-address" {
+#}
+
+variable "frontend-port" {
+  
+}
+
+variable "backend-port" {
+  
+}
+
+
+variable "nat-backend-port" {
+  
+}
+
+variable "nat-frontend-port" {
+  
+}
+
+
 resource "azurerm_lb" "Private-lb" {
   name = "Private-lb"
-  location = var.location
-  resource_group_name = var.rsgname
+  location = var.rsg-location
+  resource_group_name = var.rsg-name
   sku = "Standard"
 
   frontend_ip_configuration {
@@ -22,7 +49,7 @@ resource "azurerm_lb_backend_address_pool_address" "lb-backend-address" {
   backend_address_pool_id = azurerm_lb_backend_address_pool.lb-backend.id
 }
 resource "azurerm_lb_nat_rule" "name" {
-  resource_group_name            = var.rsgname
+  resource_group_name            = var.rsg-name
   loadbalancer_id                = azurerm_lb.Private-lb.id
   name                           = "RDPAccess"
   protocol                       = "Tcp"

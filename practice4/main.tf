@@ -87,8 +87,8 @@ module "privatelb" {
   backend-port      = var.backend-port
   nat-backend-port  = var.backend-port
   nat-frontend-port = var.frontend-port
-  rsgname           = var.rsg-name
-  location          = var.rsg-location
+  rsg-name           = var.rsg-name
+  rsg-location          = var.rsg-location
 #  subnet1-address   = var.subnet1-address
 }
 

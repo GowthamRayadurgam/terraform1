@@ -1,3 +1,11 @@
+variable "rsg-name" { 
+}
+
+variable "rsg-location" {
+}
+
+
+
 resource "azurerm_network_security_group" "nsg1" {
   resource_group_name = var.rsg-name
   name = "nsg1"

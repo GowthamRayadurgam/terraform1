@@ -1,3 +1,25 @@
+variable "vmname" {
+}
+
+variable "rsg-name" {
+}
+
+variable "rsg-location" {
+}
+
+variable "userpasswd" {
+  
+}
+
+variable "nic" {
+  
+}
+
+variable "Username" {
+  
+}
+
+
 resource "azurerm_virtual_machine" "terraformVM" {
   name = var.vmname
   resource_group_name = var.rsg-name

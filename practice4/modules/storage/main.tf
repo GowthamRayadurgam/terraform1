@@ -1,3 +1,9 @@
+variable "rsg-location" {
+}
+
+variable "rsg-name" {  
+}
+
 resource "azurerm_storage_account" "tf-backend" {
   name = "tfbackend15121"
   location = var.rsg-location
