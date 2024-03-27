@@ -22,11 +22,11 @@ module "rsg1" {
   rsg-location = var.rsg-location
 }
 
-module "storage" {
+ /*module "storage" {
   source       = "./modules/storage"
   rsg-location = var.rsg-location
   rsg-name     = var.rsg-name
-}
+} */
 
 module "virtual-network" {
   source          = "./modules/vnet"

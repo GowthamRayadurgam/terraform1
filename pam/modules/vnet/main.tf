@@ -13,9 +13,6 @@ variable "CIDR1" {
 variable "subnet1-address" {
 }
 
-variable "vnet2" {
-  
-}
 
 resource "azurerm_virtual_network" "VNET1" {
   name = var.vnet1
