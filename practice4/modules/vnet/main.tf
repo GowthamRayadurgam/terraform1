@@ -1,4 +1,5 @@
-variable "vnet1" {
+variable "vnet" {
+  type = list(string)
 }
 
 variable "rsg-location" {
@@ -7,18 +8,24 @@ variable "rsg-location" {
 variable "rsg-name" {
 }
 
-variable "CIDR1" {
+variable "CIDR" {
+  type = list(string)
 }
-
 variable "subnet1-address" {
 }
 
+variable "subnet2-address" {
+  
+}
+
+
+
 
 resource "azurerm_virtual_network" "VNET1" {
-  name = var.vnet1
+  name = var.vnet
   location = var.rsg-location
   resource_group_name = var.rsg-name
-  address_space =[var.CIDR1]
+  address_space =[var.CIDR]
 }
  
 resource "azurerm_subnet" "subnet1" {
