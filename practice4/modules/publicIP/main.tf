@@ -10,3 +10,9 @@ resource "azurerm_public_ip" "PIP" {
     }
   
 }
+
+variable "rsg-name" { 
+}
+
+variable "rsg-location" {
+}
