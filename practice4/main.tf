@@ -27,12 +27,48 @@ module "rsg" {
   location = each.value.location
 }
 
+locals {
+  flattened_virtual_networks = {
+    for rg_key, vnets in var.virtual_networks : rg_key => {
+      for vnet_key, vnet in vnets : "${rg_key}-${vnet_key}" => {
+        name                = vnet_key
+        location            = module.rsg[rg_key].location
+        resource_group_name = module.rsg[rg_key].name
+        address_space       = vnet.address_space
+        subnets             = vnet.subnets
+      }
+    }
+  }
+  merged_virtual_networks = merge([for k, v in local.flattened_virtual_networks : v]...)
+}
+
 module "virtual_networks" {
   source = "./modules/vnet"
 
+  for_each = local.merged_virtual_networks
+
+  name                = each.value.name
+  location            = each.value.location
+  resource_group_name = each.value.resource_group_name
+  address_space       = each.value.address_space
+  subnets             = each.value.subnets
+}
+
+output "Vnet-name" {
+  value = module.virtual_networks
+}
+
+output "rsg-name" {
+  value = module.rsg
+}
+
+
+
+/*module "virtual_networks" {
+  source = "./modules/vnet"
   for_each = flatten([
     for rg_key, vnets in var.virtual_networks : [
-      for vnet_key, vnet in vnets : {
+      for vnet_key, vnet in vnets : {  
         name                = vnet_key
         location            = module.rsg[rg_key].location
         resource_group_name = module.rsg[rg_key].name
@@ -47,7 +83,7 @@ module "virtual_networks" {
   resource_group_name = each.value.resource_group_name
   address_space       = each.value.address_space
   subnets             = each.value.subnets
-}
+} */
 
 /*
 module "rsg" {
