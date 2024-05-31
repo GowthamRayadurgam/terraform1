@@ -16,18 +16,113 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-module "rsg1" {
-  source       = "./modules/ResourceGRP"
-  rsg-name     = var.rsg-name
-  rsg-location = var.rsg-location
+
+
+module "rsg" {
+  source = "./modules/ResourceGRP"
+  resource_groups = var.resource_groups
+  for_each = var.resource_groups
+
+  name     = each.key
+  location = each.value.location
 }
 
-module "storage" {
+locals {
+  flattened_virtual_networks = {
+    for rg_key, vnets in var.virtual_networks : rg_key => {
+      for vnet_key, vnet in vnets : "${rg_key}-${vnet_key}" => {
+        name                = vnet_key
+        location            = module.rsg[rg_key].location
+        resource_group_name = module.rsg[rg_key].name
+        address_space       = vnet.address_space
+        subnets             = vnet.subnets
+      }
+    }
+  }
+  merged_virtual_networks = merge([for k, v in local.flattened_virtual_networks : v]...)
+}
+
+module "virtual_networks" {
+  source = "./modules/vnet"
+
+  for_each = local.merged_virtual_networks
+
+  name                = each.value.name
+  location            = each.value.location
+  resource_group_name = each.value.resource_group_name
+  address_space       = each.value.address_space
+  subnets             = each.value.subnets
+}
+
+output "Vnet-name" {
+  value = module.virtual_networks
+}
+
+output "rsg-name" {
+  value = { for i, j in var.resource_groups : i => j.location}
+}
+
+output "rsg-names" {
+  value = keys(var.resource_groups)
+}
+
+output "rsg-location" {
+  value = values(var.resource_groups)
+}
+
+output "vnet-names" {
+  value = values(var.virtual_networks)
+}
+
+output "vnet_address_spaces" {
+  value = { for vnet_key, vnet in var.virtual_networks : vnet_key => vnet.address_space }
+}
+
+
+/*module "virtual_networks" {
+  source = "./modules/vnet"
+  for_each = flatten([
+    for rg_key, vnets in var.virtual_networks : [
+      for vnet_key, vnet in vnets : {  
+        name                = vnet_key
+        location            = module.rsg[rg_key].location
+        resource_group_name = module.rsg[rg_key].name
+        address_space       = vnet.address_space
+        subnets             = vnet.subnets
+      }
+    ]
+  ])
+
+  name                = each.value.name
+  location            = each.value.location
+  resource_group_name = each.value.resource_group_name
+  address_space       = each.value.address_space
+  subnets             = each.value.subnets
+} */
+
+/*
+module "rsg" {
+  source       = "./modules/ResourceGRP"
+  resource_groups = var.resource_groups
+#  rsg-name     = var.rsg-name
+#  rsg-location = var.rsg-location
+}
+*/
+
+/*
+module "vnet" {
+  source = "./modules/vnet"
+  virtual_networks = var.virtual_networks
+}
+*/
+
+/*module "storage" {
   source       = "./modules/storage"
   rsg-location = var.rsg-location
   rsg-name     = var.rsg-name
-}
+} */
 
+/*
 module "virtual-network" {
   source          = "./modules/vnet"
   vnet1           = var.vnet1
@@ -37,13 +132,14 @@ module "virtual-network" {
   subnet1-address = var.subnet1-address
 }
 
-module "users-creation" {
+/*module "users-creation" {
   source = "./modules/user"
   #  count  = length(var.users)  -- Count Parameter should not be used in root module
   users = {
   }
-}
+}*/
 
+/*
 module "publicIP" {
   source       = "./modules/publicIP"
   rsg-name     = var.rsg-name
@@ -87,9 +183,9 @@ module "privatelb" {
   backend-port      = var.backend-port
   nat-backend-port  = var.backend-port
   nat-frontend-port = var.frontend-port
-  rsg-name           = var.rsg-name
-  rsg-location          = var.rsg-location
-#  subnet1-address   = var.subnet1-address
+  rsg-name          = var.rsg-name
+  rsg-location      = var.rsg-location
+  #  subnet1-address   = var.subnet1-address
 }
 
 
@@ -105,3 +201,5 @@ output "VM1-access" {
   value = nonsensitive(module.vm.Username)
   #  sensitive = true
 }
+
+*/

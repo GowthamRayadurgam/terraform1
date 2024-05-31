@@ -10,17 +10,18 @@ variable "client_secret" {
 variable "tenant_id" {
 }
 
+/*
 variable "rsg-name" {
 }
 
 variable "rsg-location" {
 }
-
+*/
 variable "CIDR1" {
 }
 
 variable "vnet1" {
-  
+
 }
 
 variable "subnet1-address" {
@@ -54,4 +55,20 @@ variable "nat-frontend-port" {
 
 variable "nat-backend-port" {
 
+}
+
+variable "resource_groups" {
+  type = map(object({
+    location = string
+  }))
+}
+
+
+variable "virtual_networks" {
+  type = map(map(object({
+    address_space = list(string)
+    subnets       = map(object({
+      address_prefix = string
+    }))
+  })))
 }
