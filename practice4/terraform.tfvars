@@ -6,7 +6,7 @@ tenant_id       = "44637267-515d-4b7d-af99-89581adde1b8"
 #rsg-name        = "rsg1"
 vnet1           = "vnet1"
 CIDR1           = "10.0.0.0/16"
-subnet1-address = "10.0.0.0/24"
+subnet-address = "10.0.0.0/24"
 users = {
   "gowtham@gmail.com" = "Gowtham"
   "sai@gmail.com"     = "Sai"
@@ -25,7 +25,6 @@ resource_groups ={
   "rsg2" = {location = "north europe"}
 }
 
-
 virtual_networks = {
   "rsg1" = {
       "VNET1" = {
@@ -36,4 +35,14 @@ virtual_networks = {
         } 
       }
     }
+
+  "rsg2" = {
+    "vnet2" = {
+      address_space = ["10.1.0.0/16"]
+      subnets = {
+        "subnet1" = { address_prefix = "10.1.0.0/24"}
+      }
+    }
+  }
 }
+

@@ -17,17 +17,17 @@ variable "rsg-location" {
   
 }*/
 
-variable "name" {
+variable "rsg-name" {
   type = string
 }
 
-variable "location" {
+variable "rsg-location" {
   type = string
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.name
-  location = var.location
+  name     = var.rsg-name
+  location = var.rsg-location
 }
 
 output "name" {

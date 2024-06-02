@@ -40,7 +40,7 @@ output "name" {
 }
 
 output "subnets" {
-  value = azurerm_subnet.subnet
+  value = {for subnet in azurerm_subnet.subnet : subnet.name => subnet.id }
 }
 
 /*

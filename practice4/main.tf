@@ -16,15 +16,13 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-
-
 module "rsg" {
   source = "./modules/ResourceGRP"
   resource_groups = var.resource_groups
   for_each = var.resource_groups
 
-  name     = each.key
-  location = each.value.location
+  rsg-name     = each.key
+  rsg-location = each.value.location
 }
 
 locals {
@@ -54,29 +52,16 @@ module "virtual_networks" {
   subnets             = each.value.subnets
 }
 
-output "Vnet-name" {
-  value = module.virtual_networks
+module "nic" {
+  source = "./modules/NIC"
+
+  for_each = { for k, v in local.merged_virtual_networks : k => v if k == "VNET1" }
+  rsg-name = each.value.resource_group_name
+  rsg-location = each.value.location
+  subnet_id = module.virtual_networks[each.key].subnet_id
 }
 
-output "rsg-name" {
-  value = { for i, j in var.resource_groups : i => j.location}
-}
 
-output "rsg-names" {
-  value = keys(var.resource_groups)
-}
-
-output "rsg-location" {
-  value = values(var.resource_groups)
-}
-
-output "vnet-names" {
-  value = values(var.virtual_networks)
-}
-
-output "vnet_address_spaces" {
-  value = { for vnet_key, vnet in var.virtual_networks : vnet_key => vnet.address_space }
-}
 
 
 /*module "virtual_networks" {

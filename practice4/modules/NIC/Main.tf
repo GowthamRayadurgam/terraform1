@@ -7,7 +7,7 @@ variable "rsg-location" {
   
 }
 
-variable "subnet1-address" {
+variable "subnet_id" {
 
 }
 
@@ -18,7 +18,7 @@ resource "azurerm_network_interface" "nic1" {
   location = var.rsg-location
   ip_configuration {
     name = "internal"
-    subnet_id = var.subnet1-address.id
+    subnet_id = var.subnet_id
     private_ip_address_allocation = "Dynamic"
   }
 }

@@ -24,7 +24,7 @@ variable "vnet1" {
 
 }
 
-variable "subnet1-address" {
+variable "subnet-address" {
 
 }
 
