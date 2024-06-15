@@ -35,13 +35,20 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes = [each.value.address_prefix]
 }
 
+locals {
+  subnet1_in_vnet2 = [for i, j in azurerm_subnet.subnet : j.id if i == "subnet1" && j.virtual_network_name == "vnet2"]
+}
+
+
 output "name" {
   value = azurerm_virtual_network.vnet.name
 }
 
-output "subnets" {
-  value = {for subnet in azurerm_subnet.subnet : subnet.name => subnet.id }
+output "subnet1_id_in_vnet2" {
+  value = local.subnet1_in_vnet2
 }
+
+
 
 /*
 variable "virtual_networks" {

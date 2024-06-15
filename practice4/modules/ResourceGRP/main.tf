@@ -1,5 +1,5 @@
-variable "resource_groups"{}
-/*  type = map(object({
+/* variable "resource_groups"{}
+ type = map(object({
     location = string
   }))
 }*/ 
@@ -17,17 +17,17 @@ variable "rsg-location" {
   
 }*/
 
-variable "rsg-name" {
+variable "name" {
   type = string
 }
 
-variable "rsg-location" {
+variable "location" {
   type = string
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.rsg-name
-  location = var.rsg-location
+  name     = var.name
+  location = var.location
 }
 
 output "name" {

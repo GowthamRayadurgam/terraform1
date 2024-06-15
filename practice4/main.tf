@@ -20,7 +20,6 @@ module "rsg" {
   source = "./modules/ResourceGRP"
   resource_groups = var.resource_groups
   for_each = var.resource_groups
-
   rsg-name     = each.key
   rsg-location = each.value.location
 }
@@ -58,7 +57,7 @@ module "nic" {
   for_each = { for k, v in local.merged_virtual_networks : k => v if k == "VNET1" }
   rsg-name = each.value.resource_group_name
   rsg-location = each.value.location
-  subnet_id = module.virtual_networks[each.key].subnet_id
+  subnet_id = module.virtual_networks.subnet1_id_in_vnet2
 }
 
 
