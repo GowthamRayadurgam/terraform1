@@ -70,3 +70,7 @@ variable "aks_dns_prefix" {
   
 }
 
+variable "gateway_id" {
+  
+}
+
