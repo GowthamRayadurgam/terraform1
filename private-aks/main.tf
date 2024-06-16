@@ -78,3 +78,42 @@ module "Virtual_machine" {
   depends_on = [ azurerm_resource_group.Private-Aks ]
 }
 
+module "acr" {
+  source = "./modules/acr"
+  acr_name = "acr1512"
+  acr_sku = "Basic"
+  resource_group_name = var.resource_group_name
+  location = var.location  
+}
+
+module "aks" {
+  source = "./modules/aks"
+  resource_group_name = var.resource_group_name
+  location = var.location
+  aks_name = var.aks_name
+  aks_version = "1.28.9"
+  aks_dns_prefix = var.aks_name
+  aks_azure_policy_enabled = true
+  default_node_pool_max_count = "2"
+  default_node_pool_node_count = "2"
+  default_node_pool_os_disk_size_gb = "128"
+  default_node_pool_os_disk_type = "Managed"
+  default_node_pool_os_sku = "Ubuntu"
+  default_nodepool_vm_size = "Standard_D4s_V3"
+  default_node_pool_vnet_subnet_id = module.spoke_Vnet.subnet_id[var.node_pool]
+  aks_dns_service_ip = "10.2.0.5"
+  aks_network_plugin = "azure"
+  aks_network_policy = "calico"
+  aks_service_cidr = "10.2.0.0/29"
+  aks_outbound_type = "userDefinedRouting"
+  gateway_id = 
+  depends_on = [ module ]
+}
+
+resource "azurerm_role_assignment" "acr_aks" {
+  principal_id                     = module.aks.aks_identity
+  role_definition_name             = "AcrPull"
+  scope                            = module.acr.acr_id
+  skip_service_principal_aad_check = true
+}
+

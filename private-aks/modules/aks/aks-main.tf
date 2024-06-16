@@ -25,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   ingress_application_gateway {
-    gateway_id = var.
+    gateway_id = var.gateway_id
   }
 
 
