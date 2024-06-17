@@ -1,12 +1,12 @@
+variable "aks_name" {
+  
+}
+
 variable "resource_group_name" {
   
 }
 
 variable "location" {
-  
-}
-
-variable "aks_name" {
   
 }
 
@@ -69,8 +69,10 @@ variable "aks_azure_policy_enabled" {
 variable "aks_dns_prefix" {
   
 }
-
-variable "gateway_id" {
+variable "default_node_pool_min_count" {
   
 }
 
+/* variable "gateway_id" {  
+}
+*/

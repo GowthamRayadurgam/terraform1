@@ -28,7 +28,7 @@ module "Hub_vnet" {
       private_link_service_network_policies_enabled = true
   }]
 
-  depends_on = [ azurerm_resource_group.Private-Aks ]
+  depends_on = [azurerm_resource_group.Private-Aks]
 }
 
 module "spoke_Vnet" {
@@ -50,7 +50,7 @@ module "spoke_Vnet" {
       private_link_service_network_policies_enabled : true
     }
   ]
-  depends_on = [ azurerm_resource_group.Private-Aks ]
+  depends_on = [azurerm_resource_group.Private-Aks]
 }
 
 module "vnet-peering" {
@@ -75,39 +75,39 @@ module "Virtual_machine" {
   vm_os_disk_image              = var.vm_os_disk_image
   subnet_id                     = module.spoke_Vnet.subnet_id[var.vm_subnet]
   private_ip_address_allocation = "Dynamic"
-  depends_on = [ azurerm_resource_group.Private-Aks ]
+  depends_on                    = [azurerm_resource_group.Private-Aks]
 }
 
 module "acr" {
-  source = "./modules/acr"
-  acr_name = "acr1512"
-  acr_sku = "Basic"
+  source              = "./modules/acr"
+  acr_name            = "acr1512"
+  acr_sku             = "Basic"
   resource_group_name = var.resource_group_name
-  location = var.location  
+  location            = var.location
 }
 
 module "aks" {
-  source = "./modules/aks"
-  resource_group_name = var.resource_group_name
-  location = var.location
-  aks_name = var.aks_name
-  aks_version = "1.28.9"
-  aks_dns_prefix = var.aks_name
-  aks_azure_policy_enabled = true
-  default_node_pool_max_count = "2"
-  default_node_pool_node_count = "2"
+  source                            = "./modules/aks"
+  resource_group_name               = var.resource_group_name
+  location                          = var.location
+  aks_name                          = var.aks_name
+  aks_version                       = "1.28.9"
+  aks_dns_prefix                    = var.aks_name
+  aks_azure_policy_enabled          = true
+  default_node_pool_max_count       = "2"
+  default_node_pool_node_count      = "1"
   default_node_pool_os_disk_size_gb = "128"
-  default_node_pool_os_disk_type = "Managed"
-  default_node_pool_os_sku = "Ubuntu"
-  default_nodepool_vm_size = "Standard_D4s_V3"
-  default_node_pool_vnet_subnet_id = module.spoke_Vnet.subnet_id[var.node_pool]
-  aks_dns_service_ip = "10.2.0.5"
-  aks_network_plugin = "azure"
-  aks_network_policy = "calico"
-  aks_service_cidr = "10.2.0.0/29"
-  aks_outbound_type = "userDefinedRouting"
-  gateway_id = 
-  depends_on = [ module ]
+  default_node_pool_os_disk_type    = "Managed"
+  default_node_pool_os_sku          = "Ubuntu"
+  default_nodepool_vm_size          = "Standard_D2_v2"
+  default_node_pool_vnet_subnet_id  = module.spoke_Vnet.subnet_id["node_pool"]
+  aks_dns_service_ip                = "10.3.0.5"
+  aks_network_plugin                = "azure"
+  aks_network_policy                = "calico"
+  aks_service_cidr                  = "10.3.0.0/29"
+  aks_outbound_type                 = "userDefinedRouting"
+  depends_on                        = [module.acr]
+  default_node_pool_min_count = "1"
 }
 
 resource "azurerm_role_assignment" "acr_aks" {
@@ -115,5 +115,8 @@ resource "azurerm_role_assignment" "acr_aks" {
   role_definition_name             = "AcrPull"
   scope                            = module.acr.acr_id
   skip_service_principal_aad_check = true
+  depends_on = [ module.acr , module.aks ]
 }
+
+
 

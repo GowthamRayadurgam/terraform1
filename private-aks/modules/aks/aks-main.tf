@@ -3,8 +3,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = var.resource_group_name
   location = var.location
   kubernetes_version = var.aks_version
-  private_cluster_enabled = true
-  private_dns_zone_id = "System"
+#  private_cluster_enabled = true
+#  private_dns_zone_id = "System"
   azure_policy_enabled = var.aks_azure_policy_enabled
   dns_prefix = var.aks_dns_prefix
   sku_tier = "Free"
@@ -24,9 +24,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-  ingress_application_gateway {
+/*  ingress_application_gateway {
     gateway_id = var.gateway_id
-  }
+  } */
 
 
   default_node_pool {
@@ -35,6 +35,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count = var.default_node_pool_node_count
     max_pods = "30"
     max_count = var.default_node_pool_max_count
+    min_count = var.default_node_pool_min_count
     enable_auto_scaling = true
     type = "VirtualMachineScaleSets"
     os_disk_type = var.default_node_pool_os_disk_type
@@ -48,8 +49,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_policy = var.aks_network_policy
     dns_service_ip = var.aks_dns_service_ip
     service_cidr = var.aks_service_cidr
-    load_balancer_sku = "Standard"
-    outbound_type = var.aks_outbound_type
+    load_balancer_sku = "standard"
+#    outbound_type = var.aks_outbound_type
   }
 
   key_vault_secrets_provider {
