@@ -119,4 +119,16 @@ resource "azurerm_role_assignment" "acr_aks" {
 }
 
 
+module "app-GW" {
+  
+  source = "./modules/application_gateway"
+  resource_group_name = var.resource_group_name
+  location = var.location
+  app_Gw_name = var.app_Gw_name
+  backend_http_settings_port = 80
+  gateway_ip_subnet_id = module.Hub_vnet.subnet_id["application_gateway_Subnet"]
+  }
+
+
+
 

@@ -75,6 +75,9 @@ variable "aks_name" {
   default = "terraform-aks"
 }
 
+variable "app_Gw_name" {
+  default = "agic"
+}
 
 /* variable "subnet_id" {
 } */
