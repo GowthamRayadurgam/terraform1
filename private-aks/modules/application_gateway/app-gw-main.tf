@@ -21,8 +21,6 @@ resource "azurerm_application_gateway" "app-GW" {
   location = var.location
   name = var.app_Gw_name
 
-
-
   sku {
     name = "Standard_v2"
     tier = "Standard_v2"
