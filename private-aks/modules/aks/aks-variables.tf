@@ -46,9 +46,9 @@ variable "aks_network_plugin" {
   
 }
 
-variable "aks_network_policy" {
+/*variable "aks_network_policy" {
   
-}
+} */
 
 variable "aks_dns_service_ip" {
   
@@ -73,6 +73,9 @@ variable "default_node_pool_min_count" {
   
 }
 
-/* variable "gateway_id" {  
+ variable "gateway_id" {  
 }
-*/
+
+variable "aks_network_policy" {
+  
+}

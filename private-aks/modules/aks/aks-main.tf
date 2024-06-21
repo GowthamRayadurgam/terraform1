@@ -3,8 +3,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name = var.resource_group_name
   location = var.location
   kubernetes_version = var.aks_version
-#  private_cluster_enabled = true
-#  private_dns_zone_id = "System"
+  private_cluster_enabled = true
+  private_dns_zone_id = "System"
   azure_policy_enabled = var.aks_azure_policy_enabled
   dns_prefix = var.aks_dns_prefix
   sku_tier = "Free"
@@ -24,9 +24,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     type = "SystemAssigned"
   }
 
-/*  ingress_application_gateway {
+  ingress_application_gateway {
     gateway_id = var.gateway_id
-  } */
+ }
 
 
   default_node_pool {

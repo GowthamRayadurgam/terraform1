@@ -16,8 +16,8 @@ module "Hub_vnet" {
     private_link_service_network_policies_enabled = true
     },
     {
-      name                                          = "application_gateway_Subnet"
-      address_prefixes                              = var.app_GW_prefix
+      name                                          = "application_gateway_Subnet_nic"
+      address_prefixes                              = var.app_GW_nic_prefix
       private_endpoint_network_policies_enabled     = true
       private_link_service_network_policies_enabled = true
     },
@@ -26,7 +26,14 @@ module "Hub_vnet" {
       address_prefixes                              = var.bastion_subnet
       private_endpoint_network_policies_enabled     = true
       private_link_service_network_policies_enabled = true
-  }]
+  },
+  {
+    name = "application_gateway_backend"
+    address_prefixes = var.app_GW_backend_prefix
+    private_endpoint_network_policies_enabled = true
+    private_link_service_network_policies_enabled = true
+  }
+  ]
 
   depends_on = [azurerm_resource_group.Private-Aks]
 }
@@ -78,6 +85,8 @@ module "Virtual_machine" {
   depends_on                    = [azurerm_resource_group.Private-Aks]
 }
 
+
+
 module "acr" {
   source              = "./modules/acr"
   acr_name            = "acr1512"
@@ -104,10 +113,11 @@ module "aks" {
   aks_dns_service_ip                = "10.3.0.5"
   aks_network_plugin                = "azure"
   aks_network_policy                = "calico"
-  aks_service_cidr                  = "10.3.0.0/29"
+  aks_service_cidr                  = "10.3.0.0/24"
   aks_outbound_type                 = "userDefinedRouting"
-  depends_on                        = [module.acr]
+  gateway_id = module.app_GW.app_gw_id
   default_node_pool_min_count = "1"
+    depends_on                        = [module.acr , module.app_GW]
 }
 
 resource "azurerm_role_assignment" "acr_aks" {
@@ -118,17 +128,34 @@ resource "azurerm_role_assignment" "acr_aks" {
   depends_on = [ module.acr , module.aks ]
 }
 
+resource "azurerm_role_assignment" "agic_role" {
+  principal_id = module.aks.ingress_application_gateway_identity
+  role_definition_name = "Network Contributor"
+  scope = module.app_GW.gateway_ip_configuration
+  depends_on = [ module.aks , module.app_GW ]
+}
 
-module "app-GW" {
-  
+resource "azurerm_role_assignment" "agic_GW_role" {
+  principal_id = module.aks.ingress_application_gateway_identity
+  role_definition_name = "Contributor"
+  scope = module.app_GW.app_gw_id
+  depends_on = [ module.aks , module.app_GW ]
+}
+
+module "app_GW" {
   source = "./modules/application_gateway"
   resource_group_name = var.resource_group_name
   location = var.location
-  app_Gw_name = var.app_Gw_name
-  backend_http_settings_port = 80
-  gateway_ip_subnet_id = module.Hub_vnet.subnet_id["application_gateway_Subnet"]
-  }
+  app_Gw_name = "agic"
+  backend_http_settings_port = "80"
+  gateway_ip_subnet_id = module.Hub_vnet.subnet_id["application_gateway_backend"]
+  app_GW_nic = module.Hub_vnet.subnet_id["application_gateway_Subnet_nic"]
+}
 
-
-
-
+module "ms_sql" {
+  source = "./modules/sql"
+  resource_group_name = var.resource_group_name
+  location = var.location
+  mssql_name = "mssql-server"
+  administrator_login_password = var.administrator_login_password
+}

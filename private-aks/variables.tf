@@ -12,8 +12,12 @@ variable "hub_address_space" {
   default = ["10.1.0.0/16"]
 }
 
-variable "app_GW_prefix" {
-  default = ["10.1.0.0/26"]
+variable "app_GW_nic_prefix" {
+  default = ["10.1.0.0/27"]
+}
+
+variable "app_GW_backend_prefix" {
+  default = ["10.1.33.0/28"]
 }
 
 variable "bastion_subnet" {
@@ -71,13 +75,14 @@ variable "vm_os_disk_image" {
   }
 }
 
+/* variable "subnet_id" {
+} */
+
 variable "aks_name" {
   default = "terraform-aks"
 }
 
-variable "app_Gw_name" {
-  default = "agic"
+variable "administrator_login_password" {
+  default = "s6SLq2CVzkL7fML"
+  sensitive = true
 }
-
-/* variable "subnet_id" {
-} */

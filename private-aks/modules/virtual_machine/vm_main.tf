@@ -80,10 +80,16 @@ resource "azurerm_linux_virtual_machine" "Virtual_machine" {
   }
 
 
-/*  provisioner "remote-exec" {
+  provisioner "remote-exec" {
     inline = [ 
-      "chmod +x /tmp/script.sh",
-      "/tmp/script.sh args",
+      "curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash",
+      "curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl",
+      "curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256",
+      "sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl",
+      "kubectl version --client --output=yaml"
+
+
+
      ]  
     connection {
       type     = "ssh"
@@ -91,7 +97,7 @@ resource "azurerm_linux_virtual_machine" "Virtual_machine" {
       password = "Gowtham@123"
       host     = azurerm_public_ip.public_ip.ip_address
     }  
-  }  */
+  }  
 
 
 

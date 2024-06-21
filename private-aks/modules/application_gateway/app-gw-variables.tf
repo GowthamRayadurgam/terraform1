@@ -33,3 +33,7 @@ variable "gateway_ip_subnet_id" {
 variable "backend_http_settings_port" {
   
 }
+
+variable "app_GW_nic" {
+  
+}

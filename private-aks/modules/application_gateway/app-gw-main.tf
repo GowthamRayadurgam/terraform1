@@ -2,18 +2,19 @@ resource "azurerm_public_ip" "app_GW-Public-IP" {
   name = "app_GW-Public-IP"
   resource_group_name = var.resource_group_name
   location = var.location
-  allocation_method = "static"
+  allocation_method = "Static"
+  sku = "Standard"
 }
 
 
 locals {
-  backend_address_pool_name      = "${azurerm_application_gateway.app-GW.name}-beap"
-  frontend_port_name             = "${azurerm_application_gateway.app-GW.name}-feport"
-  frontend_ip_configuration_name = "${azurerm_application_gateway.app-GW.name}-feip"
-  http_setting_name              = "${azurerm_application_gateway.app-GW.name}-be-htst"
-  listener_name                  = "${azurerm_application_gateway.app-GW.name}-httplstn"
-  request_routing_rule_name      = "${azurerm_application_gateway.app-GW.name}-rqrt"
-  redirect_configuration_name    = "${azurerm_application_gateway.app-GW.name}-rdrcfg"
+  backend_address_pool_name      = "${var.app_Gw_name}-beap"
+  frontend_port_name             = "${var.app_Gw_name}-feport"
+  frontend_ip_configuration_name = "${var.app_Gw_name}-feip"
+  http_setting_name              = "${var.app_Gw_name}-be-htst"
+  listener_name                  = "${var.app_Gw_name}-httplstn"
+  request_routing_rule_name      = "${var.app_Gw_name}-rqrt"
+  redirect_configuration_name    = "${var.app_Gw_name}-rdrcfg"
  }
 
 resource "azurerm_application_gateway" "app-GW" {
@@ -24,11 +25,12 @@ resource "azurerm_application_gateway" "app-GW" {
   sku {
     name = "Standard_v2"
     tier = "Standard_v2"
+    capacity = 2
   }
 
 
   gateway_ip_configuration {
-    name      = "${azurerm_application_gateway.app-GW.name}-gatewayip"
+    name      = "${var.app_Gw_name}-gatewayip"
     subnet_id = var.gateway_ip_subnet_id
   }
 
@@ -75,3 +77,24 @@ resource "azurerm_application_gateway" "app-GW" {
     backend_http_settings_name = local.http_setting_name
   }
 }
+
+
+
+/*
+resource "azurerm_network_interface" "app_GW_nic" {
+  name = "${azurerm_application_gateway.app-GW.name}-nic"
+  location = var.location
+  resource_group_name = var.resource_group_name
+  ip_configuration {
+    name = "${azurerm_application_gateway.app-GW.name}-nic-ip-config"
+    subnet_id = var.app_GW_nic
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_network_interface_application_gateway_backend_address_pool_association" "app_GW_nic_association" {
+  network_interface_id = azurerm_network_interface.app_GW_nic.id
+  ip_configuration_name = azurerm_network_interface.app_GW_nic.ip_configuration[0].name
+  backend_address_pool_id = tolist(azurerm_application_gateway.app-GW.backend_address_pool).0.id
+}
+*/
