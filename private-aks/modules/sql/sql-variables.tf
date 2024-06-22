@@ -16,7 +16,7 @@ variable "administrator_login_password" {
 
 
 variable "db_sku" {
-  default = "GP_S_Gen5_2"
+  default = "Basic"
 }
 
 variable "DB_max_size" {

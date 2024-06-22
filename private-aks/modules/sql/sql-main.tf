@@ -16,16 +16,20 @@ resource "azurerm_mssql_server" "ms-sql" {
 resource "azurerm_mssql_database" "sql_DB" {
   name = "mssql_DB"
   server_id = azurerm_mssql_server.ms-sql.id
-  max_size_gb = var.DB_max_size
+#  max_size_gb = var.DB_max_size
   read_scale = false
   sku_name = var.db_sku
   zone_redundant = false
   maintenance_configuration_name = "SQL_Default"
   storage_account_type = "Local"
+
+/*
   short_term_retention_policy {
-    retention_days = "20"
+    retention_days = "7"
   }
-  lifecycle {
+/*  lifecycle {
     prevent_destroy = true
   }
+
+*/
 }

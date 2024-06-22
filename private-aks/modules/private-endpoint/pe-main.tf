@@ -21,6 +21,7 @@ resource "azurerm_private_endpoint" "pe" {
       name = "${var.pe_name}-service_connection"
       private_connection_resource_id = var.private_connection_resource_id
       is_manual_connection = false
+      subresource_names = ["sqlServer"]
     }
 
     private_dns_zone_group {
