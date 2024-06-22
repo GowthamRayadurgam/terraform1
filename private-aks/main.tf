@@ -159,3 +159,13 @@ module "ms_sql" {
   mssql_name = "mssql-server"
   administrator_login_password = var.administrator_login_password
 }
+
+module "sql-pe" {
+  source = "./modules/private-endpoint"
+  location = var.location
+  resource_group_name = var.resource_group_name
+  private_connection_resource_id = module.ms_sql.mssql_database_id
+  pe_subnet_id = module.spoke_Vnet.subnet_id["node_pool"]
+  pvt_dns_vnet_id = module.spoke_Vnet.vnet_id
+  pe_name = "sql-pe"
+}
