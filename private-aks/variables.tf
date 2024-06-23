@@ -82,23 +82,28 @@ variable "aks_name" {
   default = "terraform-aks"
 }
 
+
+
 variable "administrator_login_password" {
   default = "s6SLq2CVzkL7fML"
   sensitive = true
 }
 
+/*
 variable "appgw_cert_name" {
-  
+  default = "appgw-sslcert"
 }
 
 variable "appgw_certificate_passwd" {
-  
+  default = ""
 }
 
 variable "appgw_kv_name" {
-  
+  default = "appgwkeyvault15121996"
 }
 
 variable "appgw_certificate_path" {
-  
+  default = "./sslcert.pfx"
 }
+
+*/

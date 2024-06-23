@@ -21,20 +21,30 @@ variable "object_id" {
 }
 
 variable "key_permissions" {
-  default = "Get"
+  default = ["Get"]
 }
 
 variable "secret_permissions" {
-    default = "Get"
+    default = ["Get"]
 }
 
 variable "certificate_permissions" {
-  default = "Get"
+  default = ["Get"]
 }
 
 variable "storage_permissions" {
-  default = "Get"
+  default = ["Get"]
 }
+
+
+variable "terraform_app_id" {
+  
+}
+
+variable "terraform_obj_id" {
+  
+}
+
 
 variable "certificate_passwd" {
 }

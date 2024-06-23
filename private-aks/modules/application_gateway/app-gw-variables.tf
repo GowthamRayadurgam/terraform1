@@ -38,9 +38,12 @@ variable "app_GW_nic" {
   
 }
 
+/*
 variable "cert_secret_id" {
 }
 
 variable "cert_name" {
   
 }
+
+*/

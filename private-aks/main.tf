@@ -6,6 +6,18 @@ resource "azurerm_resource_group" "Private-Aks" {
 data "azurerm_client_config" "current" {
 }
 
+data "azuread_service_principal" "Gowtham-terraform" {
+  display_name = "Gowtham-terraform"
+}
+
+data "azuread_service_principal" "terraform_app_id" {
+  client_id = "107ea390-d996-40b7-a339-72dd4c714ba5"
+}
+
+data "azuread_service_principal" "terraform_obj_id" {
+  object_id = "46299ca2-6590-4222-a859-4e20082e494f"
+}
+
 module "Hub_vnet" {
   source              = "./modules/vnet"
   resource_group_name = var.resource_group_name
@@ -153,8 +165,8 @@ module "app_GW" {
   backend_http_settings_port = "80"
   gateway_ip_subnet_id = module.Hub_vnet.subnet_id["application_gateway_backend"]
   app_GW_nic = module.Hub_vnet.subnet_id["application_gateway_Subnet_nic"]
-  cert_name = var.appgw_cert_name
-  cert_secret_id = module.appgw_kv.cert_secret_id
+#  cert_name = var.appgw_cert_name
+#  cert_secret_id = module.appgw_kv.cert_secret_id
 }
 
 module "ms_sql" {
@@ -175,14 +187,21 @@ module "sql-pe" {
   pe_name = "sql-pe"
 }
 
+/*
+
 module "appgw_kv" {
   source = "./modules/keyvault"
   location = var.location
   resource_group_name = var.resource_group_name
+  terraform_app_id = data.azuread_service_principal.terraform_app_id
+  terraform_obj_id = data.azuread_service_principal.terraform_obj_id
   kv_name = var.appgw_kv_name
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = data.azurerm_client_config.current.object_id
   certificate_passwd = var.appgw_certificate_passwd
   certificate_path = var.appgw_certificate_path
   cert_name = var.appgw_cert_name
+
 }
+*/
+

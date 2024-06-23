@@ -7,7 +7,61 @@ resource "azurerm_key_vault" "kv" {
   soft_delete_retention_days = 7
   purge_protection_enabled = false
 
-  access_policy = {}
+
+  access_policy = [{
+    tenant_id = var.tenant_id
+    object_id = "46299ca2-6590-4222-a859-4e20082e494f"
+    application_id = "107ea390-d996-40b7-a339-72dd4c714ba5"
+    certificate_permissions = [
+      "Get",
+      "List",
+      "Update",
+      "Create",
+      "Import",
+      "Delete",
+      "Recover",
+      "Backup",
+      "Restore",
+      "ManageContacts",
+      "ManageIssuers",
+      "GetIssuers",
+      "ListIssuers",
+      "SetIssuers",
+      "DeleteIssuers",
+      "Purge"
+  ],
+
+    secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete",
+      "Recover",
+      "Backup",
+      "Restore",
+      "Purge"
+    ],
+
+    key_permissions = [
+      "Get",
+      "List",
+      "Update",
+      "Create",
+      "Import",
+      "Delete",
+      "Recover",
+      "Backup",
+      "Restore",
+      "Encrypt",
+      "Decrypt",
+      "UnwrapKey",
+      "WrapKey",
+      "Verify",
+      "Sign",
+      "Purge"
+  ],
+  storage_permissions = []
+ }]
 }
 
 resource "azurerm_key_vault_access_policy" "kv_access" {
