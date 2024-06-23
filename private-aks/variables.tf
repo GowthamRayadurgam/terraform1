@@ -86,3 +86,19 @@ variable "administrator_login_password" {
   default = "s6SLq2CVzkL7fML"
   sensitive = true
 }
+
+variable "appgw_cert_name" {
+  
+}
+
+variable "appgw_certificate_passwd" {
+  
+}
+
+variable "appgw_kv_name" {
+  
+}
+
+variable "appgw_certificate_path" {
+  
+}

@@ -76,6 +76,11 @@ resource "azurerm_application_gateway" "app-GW" {
     backend_address_pool_name  = local.backend_address_pool_name
     backend_http_settings_name = local.http_setting_name
   }
+
+  trusted_root_certificate {
+    name = var.cert_name
+    key_vault_secret_id = var.cert_secret_id
+  }
 }
 
 

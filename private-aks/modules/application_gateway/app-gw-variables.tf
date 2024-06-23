@@ -37,3 +37,10 @@ variable "backend_http_settings_port" {
 variable "app_GW_nic" {
   
 }
+
+variable "cert_secret_id" {
+}
+
+variable "cert_name" {
+  
+}

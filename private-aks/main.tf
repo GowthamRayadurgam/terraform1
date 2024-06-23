@@ -3,6 +3,9 @@ resource "azurerm_resource_group" "Private-Aks" {
   location = var.location
 }
 
+data "azurerm_client_config" "current" {
+}
+
 module "Hub_vnet" {
   source              = "./modules/vnet"
   resource_group_name = var.resource_group_name
@@ -150,6 +153,8 @@ module "app_GW" {
   backend_http_settings_port = "80"
   gateway_ip_subnet_id = module.Hub_vnet.subnet_id["application_gateway_backend"]
   app_GW_nic = module.Hub_vnet.subnet_id["application_gateway_Subnet_nic"]
+  cert_name = var.appgw_cert_name
+  cert_secret_id = module.appgw_kv.cert_secret_id
 }
 
 module "ms_sql" {
@@ -168,4 +173,16 @@ module "sql-pe" {
   pe_subnet_id = module.spoke_Vnet.subnet_id["node_pool"]
   pvt_dns_vnet_id = module.spoke_Vnet.vnet_id
   pe_name = "sql-pe"
+}
+
+module "appgw_kv" {
+  source = "./modules/keyvault"
+  location = var.location
+  resource_group_name = var.resource_group_name
+  kv_name = var.appgw_kv_name
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
+  certificate_passwd = var.appgw_certificate_passwd
+  certificate_path = var.appgw_certificate_path
+  cert_name = var.appgw_cert_name
 }
